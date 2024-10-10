@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const UsersList = () => {
-  const [users, setUsers] = useState([]);
+// Use the environment variable or fallback to the real API
+const todoUrl =
+  process.env.REACT_APP_TODO_URL ||
+  "https://jsonplaceholder.typicode.com/todos";
+
+const TodosList = () => {
+  const [todos, setTodos] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios
-      .get("https://jsonplaceholder.typicode.com/users")
+      .get(todoUrl)
       .then((response) => {
-        setUsers(response.data);
+        setTodos(response.data);
         setLoading(false);
       })
       .catch((error) => {
@@ -24,19 +29,21 @@ const UsersList = () => {
   }
 
   if (error) {
-    return <p>Error fetching users: {error}</p>;
+    return <p>Error fetching todos: {error}</p>;
   }
 
   return (
     <div>
-      <h1>User List</h1>
+      <h1>Todo List</h1>
       <ul>
-        {users.map((user) => (
-          <li key={user.id}>{user.name}</li>
+        {todos.map((todo) => (
+          <li key={todo.id} className="todo">
+            {todo.title}
+          </li> // Add class "todo"
         ))}
       </ul>
     </div>
   );
 };
 
-export default UsersList;
+export default TodosList;
